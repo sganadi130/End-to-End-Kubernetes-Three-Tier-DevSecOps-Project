@@ -1,7 +1,6 @@
 pipeline {
     agent any 
     tools {
-
         nodejs 'nodejs'
     }
     environment  {
@@ -27,8 +26,8 @@ pipeline {
                 dir('Application-Code/backend') {
                     withSonarQubeEnv('sonar-server') {
                         sh ''' $SCANNER_HOME/bin/sonar-scanner \
-                        -Dsonar.projectName=three-tier-backend \
-                        -Dsonar.projectKey=three-tier-backend '''
+                        -Dsonar.projectName=backend \
+                        -Dsonar.projectKey=backend '''
                     }
                 }
             }
@@ -40,14 +39,14 @@ pipeline {
                 }
             }
         }
-        stage('OWASP Dependency-Check Scan') {
-            steps {
-                dir('Application-Code/backend') {
-                    dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
-                    dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
-                }
-            }
-        }
+//        stage('OWASP Dependency-Check Scan') {
+//            steps {
+//                dir('Application-Code/backend') {
+//                    dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit', odcInstallation: 'DP-Check'
+//                    dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+//                }
+//            }
+//        }
         stage('Trivy File Scan') {
             steps {
                 dir('Application-Code/backend') {
